@@ -65,8 +65,8 @@ public class CustomerService {
 		boolean check = false;
 		List<Customer> collect = customers
 				.stream()
-					.filter(
-							(Customer c) -> cpf.equals(c.getCpf())).collect(Collectors.toList());
+				.filter((Customer c) -> cpf.equals(c.getCpf()))
+				.collect(Collectors.toList());
 		if (!collect.isEmpty()) {
 			check = true;
 		}

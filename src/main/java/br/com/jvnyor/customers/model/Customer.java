@@ -1,9 +1,13 @@
 package br.com.jvnyor.customers.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +25,7 @@ public class Customer {
 	@NotEmpty(message="The Name cannot be empty")
 	@Schema(description = "Name of customer", example = "Josias Junior", required = true)
 	private String name;
+	
+	@Schema(accessMode = AccessMode.READ_ONLY, example = "dd-MM-yyyy HH:mm:ss")
+	private String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 }

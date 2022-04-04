@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.jvnyor.customers.model.Customer;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class CustomerService {
 	
 	private List<Customer> customers = new ArrayList<>();
@@ -40,6 +42,7 @@ public class CustomerService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name format are incorrect");
 		} else {
 			customers.add(customer);
+			log.info("Customer saved: {}",customer);
 			return customer;
 		}
 		

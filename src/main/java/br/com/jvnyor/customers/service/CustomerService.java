@@ -3,6 +3,7 @@ package br.com.jvnyor.customers.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,25 +19,16 @@ public class CustomerService {
 
 	private List<Customer> customers = new ArrayList<>();
 
-	private List<CustomerResponse> customersResponseList = new ArrayList<>();
-	
 	public List<CustomerResponse> listAll() {
-		return customersResponseList;
+		return customers.stream().map(c -> new CustomerResponse(c)).collect(Collectors.toList());
 	}
 
 	public CustomerResponse findByCpfReturnsCustomerResponse(String cpf) {
-		
-		return customersResponseList.stream()
-				.filter(customerResponse -> customerResponse.getCpf().equals(cpf))
-				.findFirst()
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer not found"));
+		return new CustomerResponse(findByCpfReturnsCustomer(cpf));
 	}
-	
+
 	public Customer findByCpfReturnsCustomer(String cpf) {
-		
-		return customers.stream()
-				.filter(customer -> customer.getCpf().equals(cpf))
-				.findFirst()
+		return customers.stream().filter(customer -> customer.getCpf().equals(cpf)).findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer not found"));
 	}
 
@@ -54,34 +46,19 @@ public class CustomerService {
 		} else if (!stringIsCharacter(customer.getFirstName()) && !stringIsCharacter(customer.getLastName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name format are incorrect");
 		} else {
+
 			customers.add(customer);
-			for (Customer c : customers) {
-				
-				if (customer.getCpf().equals(c.getCpf())) {
-					
-					CustomerResponse customerResponse = CustomerResponse.builder()
-							.cpf(c.getCpf())
-							.fullName(c.getFirstName() + " " + c.getLastName())
-							.createdAt(c.getCreatedAt())
-							.build();
-					
-					customersResponseList.add(customerResponse);
-				}
-			}
+
 			log.info("Customer saved in memory: {}", customer);
 
-			return CustomerResponse.builder()
-					.cpf(customer.getCpf())
-					.fullName(customer.getFirstName().concat(" ").concat(customer.getLastName()))
-					.createdAt(customer.getCreatedAt())
-					.build();
+			return new CustomerResponse(customer);
 		}
 
 	}
 
 	public CustomerResponse replace(Customer customer) {
 		Customer customerSaved = findByCpfReturnsCustomer(customer.getCpf());
-		
+
 		if (!stringIsCharacter(customer.getFirstName()) && !stringIsCharacter(customer.getLastName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name format are incorrect");
 		} else if (customer.getFirstName() == null || customer.getFirstName().isBlank()
@@ -93,41 +70,35 @@ public class CustomerService {
 			customerSaved.setLastName(customer.getLastName());
 
 			for (Customer c : customers) {
-				
+
 				if (customerSaved.getCpf().equals(c.getCpf())) {
-					
+
 					findByCpfReturnsCustomerResponse(customerSaved.getCpf())
 							.setFullName(customerSaved.getFirstName().concat(" ").concat(customerSaved.getLastName()));
-					
+
 				}
 			}
-			
+
 			log.info("Customer replaced in memory {}", customerSaved);
-			
-			return CustomerResponse.builder()
-					.cpf(customerSaved.getCpf())
-					.fullName(customerSaved.getFirstName().concat(" ").concat(customerSaved.getLastName()))
-					.createdAt(customerSaved.getCreatedAt())
-					.build();
+
+			return new CustomerResponse(customerSaved);
 		}
 	}
 
 	public void delete(String cpf) {
 		customers.remove(findByCpfReturnsCustomer(cpf));
-		customersResponseList.remove(findByCpfReturnsCustomerResponse(cpf));
 	}
 
 	public boolean cpfExist(String cpf) {
 		boolean check = false;
-		
-		Optional<Customer> customerCpfExists = customers.stream()
-				.filter(customer -> cpf.equals(customer.getCpf()))
+
+		Optional<Customer> customerCpfExists = customers.stream().filter(customer -> cpf.equals(customer.getCpf()))
 				.findFirst();
-		
+
 		if (customerCpfExists.isPresent()) {
 			check = true;
 		}
-		
+
 		return check;
 	}
 

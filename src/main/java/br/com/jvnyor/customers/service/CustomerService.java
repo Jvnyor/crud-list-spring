@@ -114,6 +114,7 @@ public class CustomerService {
 
 	public void delete(String cpf) {
 		customers.remove(findByCpfReturnsCustomer(cpf));
+		customersResponseList.remove(findByCpfReturnsCustomerResponse(cpf));
 	}
 
 	public boolean cpfExist(String cpf) {

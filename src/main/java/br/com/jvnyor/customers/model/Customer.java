@@ -18,14 +18,20 @@ import lombok.NoArgsConstructor;
 public class Customer {
 
 	@NotNull(message = "The CPF cannot be null")
-	@NotEmpty(message="The CPF cannot be empty")
+	@NotEmpty(message = "The CPF cannot be empty")
 	@Schema(description = "CPF Number of customer", example = "12345678910", required = true)
 	private String cpf;
+
 	@NotNull(message = "The Name cannot be null")
-	@NotEmpty(message="The Name cannot be empty")
-	@Schema(description = "Name of customer", example = "Josias Junior", required = true)
-	private String name;
-	
+	@NotEmpty(message = "The Name cannot be empty")
+	@Schema(description = "first name of customer", example = "Nome", required = true)
+	private String firstName;
+
+	@NotNull(message = "The Name cannot be null")
+	@NotEmpty(message = "The Name cannot be empty")
+	@Schema(description = "last name of customer", example = "Sobrenome", required = true)
+	private String lastName;
+
 	@Schema(accessMode = AccessMode.READ_ONLY, example = "dd-MM-yyyy HH:mm:ss")
 	private String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 }

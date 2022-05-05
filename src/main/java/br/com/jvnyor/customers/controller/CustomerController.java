@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jvnyor.customers.model.Customer;
+import br.com.jvnyor.customers.model.CustomerResponse;
 import br.com.jvnyor.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -25,29 +26,29 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<Customer>> listCustomers() {
+	public ResponseEntity<List<CustomerResponse>> listCustomers() {
 		return ResponseEntity.ok(customerService.listAll());
 	}
-	
+
 	@GetMapping("/{cpf}")
-	public ResponseEntity<Customer> findCustomerByCpf(@PathVariable String cpf) {
-		return ResponseEntity.ok(customerService.findByCpf(cpf));
+	public ResponseEntity<CustomerResponse> findCustomerByCpf(@PathVariable String cpf) {
+		return ResponseEntity.ok(customerService.findByCpfReturnsCustomerResponse(cpf));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer) {
-		return new ResponseEntity<>(customerService.save(customer),HttpStatus.CREATED);
+	public ResponseEntity<CustomerResponse> saveCustomer(@RequestBody Customer customer) {
+		return new ResponseEntity<>(customerService.save(customer), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Customer> replaceCustomer(@RequestBody Customer customer){
+	public ResponseEntity<CustomerResponse> replaceCustomer(@RequestBody Customer customer) {
 		return ResponseEntity.ok(customerService.replace(customer));
 	}
-	
+
 	@DeleteMapping("/{cpf}")
-	public ResponseEntity<Void> deleteCustomer(@PathVariable String cpf){
+	public ResponseEntity<Void> deleteCustomer(@PathVariable String cpf) {
 		customerService.delete(cpf);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

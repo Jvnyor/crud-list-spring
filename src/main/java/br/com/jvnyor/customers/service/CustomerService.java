@@ -69,16 +69,6 @@ public class CustomerService {
 			customerSaved.setFirstName(customer.getFirstName());
 			customerSaved.setLastName(customer.getLastName());
 
-			for (Customer c : customers) {
-
-				if (customerSaved.getCpf().equals(c.getCpf())) {
-
-					findByCpfReturnsCustomerResponse(customerSaved.getCpf())
-							.setFullName(customerSaved.getFirstName().concat(" ").concat(customerSaved.getLastName()));
-
-				}
-			}
-
 			log.info("Customer replaced in memory {}", customerSaved);
 
 			return new CustomerResponse(customerSaved);

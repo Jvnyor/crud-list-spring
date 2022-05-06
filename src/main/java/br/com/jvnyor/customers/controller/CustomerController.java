@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jvnyor.customers.model.Customer;
+import br.com.jvnyor.customers.model.CustomerPutDTO;
 import br.com.jvnyor.customers.model.CustomerResponse;
 import br.com.jvnyor.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,9 +43,9 @@ public class CustomerController {
 		return new ResponseEntity<>(customerService.save(customer), HttpStatus.CREATED);
 	}
 
-	@PutMapping
-	public ResponseEntity<CustomerResponse> replaceCustomer(@RequestBody Customer customer) {
-		return ResponseEntity.ok(customerService.replace(customer));
+	@PutMapping("/{cpf}")
+	public ResponseEntity<CustomerResponse> replaceCustomer(@PathVariable String cpf, @RequestBody CustomerPutDTO customer) {
+		return ResponseEntity.ok(customerService.replace(cpf, customer));
 	}
 
 	@DeleteMapping("/{cpf}")

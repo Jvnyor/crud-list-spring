@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.jvnyor.customers.model.Customer;
+import br.com.jvnyor.customers.model.CustomerPutDTO;
 import br.com.jvnyor.customers.model.CustomerResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,8 +57,8 @@ public class CustomerService {
 
 	}
 
-	public CustomerResponse replace(Customer customer) {
-		Customer customerSaved = findByCpfReturnsCustomer(customer.getCpf());
+	public CustomerResponse replace(String cpf, CustomerPutDTO customer) {
+		Customer customerSaved = findByCpfReturnsCustomer(cpf);
 
 		if (!stringIsCharacter(customer.getFirstName()) && !stringIsCharacter(customer.getLastName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name format are incorrect");
@@ -103,7 +104,6 @@ public class CustomerService {
 	}
 
 	public boolean stringIsCharacter(String string) {
-		// TODO Auto-generated method stub
 		boolean isCharacter = true;
 		for (int i = 0; i < string.length(); i++) {
 			if (!Character.isAlphabetic(string.charAt(i)) && !Character.isSpaceChar(string.charAt(i))) {
